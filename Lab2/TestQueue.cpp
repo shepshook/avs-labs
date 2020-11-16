@@ -4,8 +4,10 @@
 
 void TestQueue::RunTests()
 {
+	std::cout << "=============== QUEUE TESTS ===============" << std::endl;
 	for (auto testCase : cases)
 	{
+		std::cout << "Tasks: " << testCase.tasksNumber << ", Prods: " << testCase.producersNumber << ", Cons: " << testCase.consumersNumber << ", " << typeid(*testCase.queue).name() << std::endl;
 		Test(testCase);
 	}
 }
@@ -19,7 +21,8 @@ bool TestQueue::Test(QueueTestCase testCase)
 	auto* results = new int[testCase.consumersNumber];
 	
 	auto* consumers = RunConsumers(testCase, producersDone, results);
-
+	
+	auto startTime = std::chrono::steady_clock::now();
 	auto* producers = RunProducers(testCase, producersDone);
 
 	for (auto i = 0; i < testCase.producersNumber; i++)
@@ -32,9 +35,13 @@ bool TestQueue::Test(QueueTestCase testCase)
 	{
 		consumers[i]->join();
 		sum += results[i];
-		std::cout << results[i] << std::endl;
+		std::cout << "Sum: " << sum << std::endl;
 	}
-	std::cout << "Sum: " << sum << std::endl;
+	
+	auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime);
+	
+	std::cout << (sum == testCase.producersNumber * testCase.tasksNumber ? "OK" : "Fail") <<  std::endl;
+	std::cout << "Elapsed " << elapsedMs.count() << " ms" << std::endl << std::endl;
 
 	return true;
 }

@@ -1,6 +1,9 @@
 #include "FixedSizeQueue.h"
 
 #include <iostream>
+#include <chrono>
+
+using std::literals::operator ""ms;
 
 FixedSizeQueue::FixedSizeQueue(int _size)
 {
@@ -19,7 +22,7 @@ void FixedSizeQueue::Push(uint8_t value)
 
 	if (!IsFull())
 		queue[tail++ % size] = value;
-	std::cout << "Push" << std::endl;
+	
 	read_cv.notify_all();
 }
 
@@ -27,12 +30,12 @@ bool FixedSizeQueue::Pop(uint8_t& value)
 {
 	std::unique_lock<std::mutex> locker(mtx);
 
-	while (IsEmpty())
-		read_cv.wait(locker);
+	read_cv.wait_for(locker, 100ms);
 
-	if (!IsEmpty())
-		value = queue[head++ % size];
-	std::cout << "Pop" << std::endl;
+	if (IsEmpty())
+		return false;
+	
+	value = queue[head++ % size];
 	write_cv.notify_all();
 	
 	return true;

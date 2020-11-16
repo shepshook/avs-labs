@@ -18,7 +18,6 @@ void BasicQueue::Push(uint8_t value)
 	tail++;
 	
 	mtx.unlock();
-	//std::cout << "Pushed" << std::endl;
 }
 
 bool BasicQueue::Pop(uint8_t& value)
@@ -35,13 +34,11 @@ bool BasicQueue::Pop(uint8_t& value)
 	if (head >= tail) 
 	{
 		mtx.unlock();
-		//std::cout << "Empty" << std::endl;
 		return false;
 	}
 	
 	value = (*vec)[head++];
 	mtx.unlock();
 
-	//std::cout << "Popped" << std::endl;
 	return true;
 }

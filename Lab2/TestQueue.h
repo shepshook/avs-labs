@@ -17,8 +17,14 @@ class TestQueue
 {
 private:
 	std::vector<QueueTestCase> cases = {
-		{10, 2, 2, new FixedSizeQueue(16)},
-		{10, 1, 1, new BasicQueue()}
+		{128, 1, 1, new FixedSizeQueue(1)},
+		{1024, 2, 2, new FixedSizeQueue(4)},
+		{4 * 1024, 4, 4, new FixedSizeQueue(16)},
+		{16 * 1024, 4, 4, new FixedSizeQueue(16)},
+		{32 * 1024, 4, 4, new FixedSizeQueue(16)},
+		{16, 1, 1, new BasicQueue()},
+		{1024, 2, 2, new BasicQueue()},
+		{16 * 1024, 4, 4, new BasicQueue()},
 	};
 
 	bool Test(QueueTestCase testCase);

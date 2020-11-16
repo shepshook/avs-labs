@@ -54,6 +54,7 @@ bool TestCounter::Test(CounterTestCase testCase)
 
 void TestCounter::RunTests()
 {
+	std::cout << "=============== COUNTER TESTS ===============" << std::endl;
 	for (auto testCase : cases)
 	{
 		std::cout << "Tasks: " << testCase.tasksNumber << ", Threads: " << testCase.threadsNumber << ", Delay: " << testCase.delayNs << ", " << typeid(*testCase.counter).name() << std::endl;
